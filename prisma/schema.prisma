@@ -1,0 +1,176 @@
+// Educational Management Platform - Database Schema
+// This schema defines the complete data model for the platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enum definitions
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum HomeworkStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  NEEDS_REVISION
+}
+
+enum BookingStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum SyncStatus {
+  SUCCESS
+  FAILED
+  IN_PROGRESS
+}
+
+// User Model - Core authentication and profile
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  teacher Teacher?
+  student Student?
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// Teacher Model - Extended teacher profile
+model Teacher {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  students         StudentTeacher[]
+  bookings         Booking[]
+  homeworkAssigned Homework[]
+
+  @@index([userId])
+  @@map("teachers")
+}
+
+// Student Model - Extended student profile with hour tracking
+model Student {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  governmentId       String   @unique // Used for French Government API integration
+  totalAllowedHours  Float    @default(0) // Total authorized training hours from Government API
+  usedHours          Float    @default(0) // Calculated from completed bookings
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relations
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teachers          StudentTeacher[]
+  bookings          Booking[]
+  homeworkSubmitted Homework[]
+
+  @@index([userId])
+  @@index([governmentId])
+  @@map("students")
+}
+
+// StudentTeacher - Many-to-many relationship between students and teachers
+model StudentTeacher {
+  id         String   @id @default(cuid())
+  studentId  String
+  teacherId  String
+  assignedAt DateTime @default(now())
+
+  // Relations
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, teacherId])
+  @@index([studentId])
+  @@index([teacherId])
+  @@map("student_teachers")
+}
+
+// Booking Model - Lesson reservations from Booking API
+model Booking {
+  id        String        @id @default(cuid())
+  studentId String
+  teacherId String
+  date      DateTime
+  duration  Float // Duration in hours
+  source    String // Identifies the source system (e.g., "booking_api")
+  status    BookingStatus @default(SCHEDULED)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Relations
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([teacherId])
+  @@index([date])
+  @@index([status])
+  @@map("bookings")
+}
+
+// Homework Model - File submissions and reviews
+model Homework {
+  id         String         @id @default(cuid())
+  studentId  String
+  teacherId  String
+  fileUrl    String // URL to the file in Vercel Blob Storage
+  fileName   String
+  fileSize   Int // File size in bytes
+  status     HomeworkStatus @default(PENDING)
+  feedback   String? // Teacher's feedback
+  submittedAt DateTime      @default(now())
+  reviewedAt DateTime? // When the teacher reviewed the homework
+  updatedAt  DateTime      @updatedAt
+
+  // Relations
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([teacherId])
+  @@index([status])
+  @@index([submittedAt])
+  @@map("homework")
+}
+
+// SyncLog Model - API synchronization tracking
+model SyncLog {
+  id           String     @id @default(cuid())
+  source       String // "booking_api" or "government_api"
+  status       SyncStatus
+  message      String? // Error message or success details
+  lastSyncTime DateTime
+  createdAt    DateTime   @default(now())
+
+  @@index([source])
+  @@index([status])
+  @@index([lastSyncTime])
+  @@map("sync_logs")
+}
