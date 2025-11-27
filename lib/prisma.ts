@@ -6,9 +6,6 @@
  *
  * In production, this creates a single instance.
  * In development, it reuses the instance stored in globalThis to survive hot reloads.
- *
- * For Prisma 7, database connection URLs are configured in prisma/prisma.config.ts
- * and passed to the PrismaClient constructor.
  */
 
 import { PrismaClient } from '@prisma/client';
@@ -21,7 +18,6 @@ export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    datasourceUrl: process.env.DATABASE_URL,
   });
 
 if (process.env.NODE_ENV !== 'production') {
