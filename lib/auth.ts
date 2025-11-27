@@ -60,13 +60,16 @@ export async function hasRole(allowedRoles: string[]): Promise<boolean> {
  *
  * @param allowedRoles - Array of roles that are allowed
  * @throws Error if user doesn't have the required role
+ * @returns The current session
  */
-export async function requireRole(allowedRoles: string[]): Promise<void> {
+export async function requireRole(allowedRoles: string[]): Promise<Session> {
   const session = await requireAuth();
 
   if (!allowedRoles.includes(session.user.role)) {
     throw new Error('Forbidden - Insufficient permissions');
   }
+
+  return session;
 }
 
 /**
