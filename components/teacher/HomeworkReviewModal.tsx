@@ -9,12 +9,6 @@
 
 import { useState, useEffect } from 'react';
 import { HomeworkStatus } from '@prisma/client';
-import { Document, Page, pdfjs } from 'react-pdf';
-
-// Configure PDF.js worker
-if (typeof window !== 'undefined') {
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-}
 
 /**
  * Homework data interface
@@ -88,11 +82,6 @@ export default function HomeworkReviewModal({
   const [feedback, setFeedback] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // PDF viewer state
-  const [numPages, setNumPages] = useState<number | null>(null);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [pdfError, setPdfError] = useState<string | null>(null);
-
   const fileType = getFileType(homework.fileName);
   const isPending = homework.status === 'PENDING';
 
@@ -102,25 +91,7 @@ export default function HomeworkReviewModal({
   useEffect(() => {
     setReviewStatus('APPROVED');
     setFeedback(homework.feedback || '');
-    setPageNumber(1);
-    setPdfError(null);
   }, [homework.id]);
-
-  /**
-   * Handle PDF document load success
-   */
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
-    setPdfError(null);
-  };
-
-  /**
-   * Handle PDF document load error
-   */
-  const onDocumentLoadError = (error: Error) => {
-    console.error('PDF load error:', error);
-    setPdfError('Failed to load PDF. You can still download and review it.');
-  };
 
   /**
    * Handle review submission
@@ -245,58 +216,25 @@ export default function HomeworkReviewModal({
             <div className="max-w-4xl mx-auto">
               {/* PDF Preview */}
               {fileType === 'pdf' && (
-                <div className="bg-white rounded-lg shadow-sm">
-                  {pdfError ? (
-                    <div className="p-8 text-center">
-                      <p className="text-red-600 mb-4">{pdfError}</p>
-                      <a
-                        href={homework.fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100"
-                      >
-                        Download PDF
-                      </a>
-                    </div>
-                  ) : (
-                    <>
-                      <Document
-                        file={homework.fileUrl}
-                        onLoadSuccess={onDocumentLoadSuccess}
-                        onLoadError={onDocumentLoadError}
-                        loading={
-                          <div className="p-8 text-center text-gray-600">
-                            Loading PDF...
-                          </div>
-                        }
-                      >
-                        <Page pageNumber={pageNumber} width={800} />
-                      </Document>
-
-                      {/* PDF navigation */}
-                      {numPages && numPages > 1 && (
-                        <div className="p-4 border-t border-gray-200 flex items-center justify-center space-x-4">
-                          <button
-                            onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
-                            disabled={pageNumber <= 1}
-                            className="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
-                          >
-                            Previous
-                          </button>
-                          <span className="text-sm text-gray-600">
-                            Page {pageNumber} of {numPages}
-                          </span>
-                          <button
-                            onClick={() => setPageNumber((p) => Math.min(numPages, p + 1))}
-                            disabled={pageNumber >= numPages}
-                            className="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
-                          >
-                            Next
-                          </button>
-                        </div>
-                      )}
-                    </>
-                  )}
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden" style={{ height: '80vh' }}>
+                  <iframe
+                    src={homework.fileUrl}
+                    className="w-full h-full border-0"
+                    title={homework.fileName}
+                  />
+                  <div className="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                    <a
+                      href={homework.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100"
+                    >
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Open in New Tab / Download
+                    </a>
+                  </div>
                 </div>
               )}
 

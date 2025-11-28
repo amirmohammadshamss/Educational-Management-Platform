@@ -22,10 +22,14 @@ export async function GET(request: NextRequest) {
           include: {
             teachers: {
               include: {
-                user: {
-                  select: {
-                    name: true,
-                    email: true,
+                teacher: {
+                  include: {
+                    user: {
+                      select: {
+                        name: true,
+                        email: true,
+                      },
+                    },
                   },
                 },
               },
@@ -59,9 +63,7 @@ export async function GET(request: NextRequest) {
     const upcomingBookings = await prisma.booking.count({
       where: {
         studentId,
-        status: {
-          in: ['CONFIRMED', 'PENDING'],
-        },
+        status: 'SCHEDULED',
         date: {
           gte: new Date(),
         },
@@ -88,10 +90,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       user: {
-        name: user.name,
+        name: user.name || user.email,
         email: user.email,
-        phone: user.phone,
-        profilePhoto: user.profilePhoto,
         role: user.role,
       },
       student: {
@@ -107,11 +107,11 @@ export async function GET(request: NextRequest) {
         homeworkApproved,
         homeworkPending,
       },
-      assignedTeachers: user.student.teachers.map((teacher) => ({
-        id: teacher.id,
+      assignedTeachers: user.student.teachers.map((st) => ({
+        id: st.teacher.id,
         user: {
-          name: teacher.user.name,
-          email: teacher.user.email,
+          name: st.teacher.user.name || st.teacher.user.email,
+          email: st.teacher.user.email,
         },
       })),
     });
@@ -151,64 +151,20 @@ export async function PATCH(request: NextRequest) {
     // Parse form data
     const formData = await request.formData();
     const name = formData.get('name') as string;
-    const phone = formData.get('phone') as string;
-    const photo = formData.get('photo') as File | null;
-    const removePhoto = formData.get('removePhoto') === 'true';
-
-    // Validation
-    if (!name || !name.trim()) {
-      return NextResponse.json(
-        { error: 'Le nom est requis' },
-        { status: 400 }
-      );
-    }
-
-    let profilePhotoUrl = user.profilePhoto;
-
-    // Handle photo upload
-    if (photo) {
-      // Validate file type
-      if (!photo.type.startsWith('image/')) {
-        return NextResponse.json(
-          { error: 'Type de fichier invalide' },
-          { status: 400 }
-        );
-      }
-
-      // Validate file size (2MB)
-      if (photo.size > 2 * 1024 * 1024) {
-        return NextResponse.json(
-          { error: 'Fichier trop volumineux (max 2 MB)' },
-          { status: 400 }
-        );
-      }
-
-      // Upload to Vercel Blob
-      const blob = await put(`profile-photos/${user.id}-${Date.now()}.${photo.type.split('/')[1]}`, photo, {
-        access: 'public',
-      });
-
-      profilePhotoUrl = blob.url;
-    } else if (removePhoto) {
-      profilePhotoUrl = null;
-    }
 
     // Update user
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
-        name: name.trim(),
-        phone: phone.trim() || null,
-        profilePhoto: profilePhotoUrl,
+        name: name?.trim() || null,
       },
     });
 
     return NextResponse.json({
       success: true,
       user: {
-        name: updatedUser.name,
-        phone: updatedUser.phone,
-        profilePhoto: updatedUser.profilePhoto,
+        name: updatedUser.name || updatedUser.email,
+        email: updatedUser.email,
       },
     });
   } catch (error) {

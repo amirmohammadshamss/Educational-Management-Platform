@@ -40,7 +40,6 @@ export async function GET(request: NextRequest) {
               select: {
                 name: true,
                 email: true,
-                phone: true,
               },
             },
           },
@@ -57,12 +56,10 @@ export async function GET(request: NextRequest) {
         date: booking.date,
         duration: booking.duration,
         status: booking.status,
-        location: booking.location,
         teacher: {
           user: {
-            name: booking.teacher.user.name,
+            name: booking.teacher.user.name || booking.teacher.user.email,
             email: booking.teacher.user.email,
-            phone: booking.teacher.user.phone,
           },
         },
       })),

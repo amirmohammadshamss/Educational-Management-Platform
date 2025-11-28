@@ -242,33 +242,9 @@ export default function ProfileForm({ initialData, onUpdateSuccess }: ProfileFor
         <p className="text-xs text-gray-500 mt-1">L'email ne peut pas être modifié</p>
       </div>
 
-      {/* Role - Read-only */}
-      <div>
-        <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
-          Rôle
-        </label>
-        <input
-          type="text"
-          id="role"
-          value="Étudiant"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
-          disabled
-        />
-      </div>
+  
 
-      {/* Government ID - Read-only */}
-      <div>
-        <label htmlFor="governmentId" className="block text-sm font-medium text-gray-700 mb-2">
-          Identifiant gouvernemental
-        </label>
-        <input
-          type="text"
-          id="governmentId"
-          value={initialData.governmentId}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
-          disabled
-        />
-      </div>
+  
 
       {/* Hours Information - Read-only */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">

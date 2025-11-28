@@ -42,9 +42,7 @@ export async function GET(request: NextRequest) {
         date: {
           gte: new Date(),
         },
-        status: {
-          in: ['CONFIRMED', 'PENDING'],
-        },
+        status: 'SCHEDULED',
       },
       include: {
         teacher: {
@@ -52,6 +50,7 @@ export async function GET(request: NextRequest) {
             user: {
               select: {
                 name: true,
+                email: true,
               },
             },
           },
@@ -96,6 +95,7 @@ export async function GET(request: NextRequest) {
             user: {
               select: {
                 name: true,
+                email: true,
               },
             },
           },
@@ -108,13 +108,13 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({
-      studentName: user.name,
+      studentName: user.name || user.email,
       hoursSummary,
       upcomingBookings: upcomingBookings.map(booking => ({
         id: booking.id,
         date: booking.date,
         duration: booking.duration,
-        teacherName: booking.teacher.user.name,
+        teacherName: booking.teacher.user.name || booking.teacher.user.email,
         status: booking.status,
       })),
       homeworkStats: {
@@ -126,7 +126,7 @@ export async function GET(request: NextRequest) {
       },
       recentFeedback: recentFeedback.map(hw => ({
         id: hw.id,
-        teacherName: hw.teacher.user.name,
+        teacherName: hw.teacher.user.name || hw.teacher.user.email,
         status: hw.status,
         feedback: hw.feedback,
         reviewedAt: hw.reviewedAt,
