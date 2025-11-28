@@ -11,7 +11,12 @@ import { Role } from '@prisma/client';
  * Create User Schema
  */
 export const createUserSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
+  name: z
+    .string()
+    .max(100, 'Name is too long')
+    .transform((val) => (val === '' || !val ? null : val))
+    .nullable()
+    .optional(),
   email: z
     .string()
     .min(1, 'Email is required')

@@ -49,10 +49,8 @@ export default function UserForm({ user, onSubmit, onCancel, isLoading }: UserFo
       newErrors.email = 'Invalid email format';
     }
 
-    // Name validation
-    if (!formData.name) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.length < 2) {
+    // Name validation (optional, but if provided must be at least 2 characters)
+    if (formData.name && formData.name.length < 2) {
       newErrors.name = 'Name must be at least 2 characters';
     }
 
@@ -120,7 +118,7 @@ export default function UserForm({ user, onSubmit, onCancel, isLoading }: UserFo
       {/* Name Field */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-          Full Name <span className="text-red-500">*</span>
+          Full Name <span className="text-gray-400 text-xs">(optional)</span>
         </label>
         <input
           type="text"
@@ -203,21 +201,6 @@ export default function UserForm({ user, onSubmit, onCancel, isLoading }: UserFo
             </option>
           ))}
         </select>
-      </div>
-
-      {/* Active Status */}
-      <div className="flex items-center space-x-3">
-        <input
-          type="checkbox"
-          id="active"
-          checked={formData.active}
-          onChange={(e) => handleChange('active', e.target.checked)}
-          disabled={isLoading}
-          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-        />
-        <label htmlFor="active" className="text-sm font-medium text-gray-700">
-          Active Account
-        </label>
       </div>
 
       {/* Form Actions */}

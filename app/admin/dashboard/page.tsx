@@ -195,7 +195,7 @@ export default async function AdminDashboardPage() {
             title="Active Students"
             value={stats.activeStudents}
             colorScheme="blue"
-            linkTo="/admin/students"
+            linkTo="/admin/users"
             linkText="View students"
           />
 
@@ -204,7 +204,7 @@ export default async function AdminDashboardPage() {
             title="Active Teachers"
             value={stats.activeTeachers}
             colorScheme="green"
-            linkTo="/admin/teachers"
+            linkTo="/admin/users"
             linkText="View teachers"
           />
 
@@ -213,7 +213,7 @@ export default async function AdminDashboardPage() {
             title="Bookings This Month"
             value={stats.bookingsThisMonth}
             colorScheme="purple"
-            linkTo="/admin/bookings"
+            linkTo="/admin/reports"
             linkText="View bookings"
           />
 
@@ -222,7 +222,7 @@ export default async function AdminDashboardPage() {
             title="Completed Today"
             value={stats.completedLessonsToday}
             colorScheme="orange"
-            linkTo="/admin/bookings?status=COMPLETED"
+            linkTo="/admin/reports"
             linkText="View completed"
           />
 
@@ -231,7 +231,7 @@ export default async function AdminDashboardPage() {
             title="Pending Reviews"
             value={stats.pendingHomeworkReviews}
             colorScheme="red"
-            linkTo="/admin/homework?status=PENDING"
+            linkTo="/admin/reports"
             linkText="Review homework"
           />
         </div>

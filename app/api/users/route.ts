@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       // Create the user
       const newUser = await tx.user.create({
         data: {
-          name: validatedData.name,
+          name: validatedData.name ?? null,
           email: validatedData.email,
           passwordHash,
           role: validatedData.role,
@@ -74,23 +74,24 @@ export async function POST(request: NextRequest) {
           },
         });
       } else if (validatedData.role === Role.STUDENT) {
-        if (!validatedData.governmentId) {
-          throw new Error('Government ID is required for student accounts');
-        }
+        // Generate a default government ID if not provided (based on user ID)
+        const governmentId = validatedData.governmentId || `GEN-${newUser.id}`;
 
-        // Check if government ID already exists
-        const existingStudent = await tx.student.findUnique({
-          where: { governmentId: validatedData.governmentId },
-        });
+        // Check if government ID already exists (only if provided)
+        if (validatedData.governmentId) {
+          const existingStudent = await tx.student.findUnique({
+            where: { governmentId: validatedData.governmentId },
+          });
 
-        if (existingStudent) {
-          throw new Error('A student with this government ID already exists');
+          if (existingStudent) {
+            throw new Error('A student with this government ID already exists');
+          }
         }
 
         await tx.student.create({
           data: {
             userId: newUser.id,
-            governmentId: validatedData.governmentId,
+            governmentId: governmentId,
             totalAllowedHours: 0,
             usedHours: 0,
           },
