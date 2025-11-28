@@ -20,3 +20,20 @@
     text-wrap: balance;
   }
 }
+
+/* React-PDF styles */
+.react-pdf__Page {
+  @apply mx-auto;
+}
+
+.react-pdf__Page__canvas {
+  @apply max-w-full h-auto;
+}
+
+.react-pdf__Page__textContent {
+  @apply hidden;
+}
+
+.react-pdf__Page__annotations {
+  @apply hidden;
+}

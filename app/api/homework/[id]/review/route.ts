@@ -94,14 +94,25 @@ export async function PATCH(
       },
     });
 
-    // TODO: Send notification to student about homework review
-    // This would typically send an email or in-app notification
-    console.log(`Homework ${homeworkId} reviewed:`, {
-      status: validatedData.status,
-      studentId: homework.student.userId,
-      studentEmail: homework.student.user.email,
-      teacherName: homework.teacher.user.name,
-    });
+    // Send notification to student about homework review
+    try {
+      const { sendHomeworkReviewNotification } = await import('@/lib/notifications');
+
+      await sendHomeworkReviewNotification({
+        studentName: homework.student.user.name,
+        studentEmail: homework.student.user.email,
+        teacherName: homework.teacher.user.name,
+        fileName: homework.fileName,
+        status: validatedData.status as HomeworkStatus,
+        feedback: validatedData.feedback || '',
+        homeworkUrl: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/student/homework`,
+      });
+
+      console.log(`✅ Homework review notification sent to ${homework.student.user.email}`);
+    } catch (notificationError) {
+      // Log error but don't fail the review
+      console.error('Failed to send homework review notification:', notificationError);
+    }
 
     // Format response
     const response = {
