@@ -6,8 +6,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { requireAuth } from '@/lib/auth';
-import { isAdmin, isTeacher, isStudent } from '@/lib/rbac';
+import { isTeacher, isStudent } from '@/lib/rbac';
 
 /**
  * GET /api/bookings/today
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
     const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
     // Build where clause based on role
-    const where: any = {
+    const where: Prisma.BookingWhereInput = {
       date: {
         gte: startOfDay,
         lte: endOfDay,

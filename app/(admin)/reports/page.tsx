@@ -9,6 +9,22 @@ import autoTable from 'jspdf-autotable';
 
 type ReportType = 'bookings' | 'hours' | 'teacher-performance' | 'student-progress';
 
+type Teacher = {
+  id: string;
+  user: {
+    name: string;
+    email: string;
+  };
+};
+
+type Student = {
+  id: string;
+  user: {
+    name: string;
+    email: string;
+  };
+};
+
 export default function ReportsPage() {
   const [reportType, setReportType] = useState<ReportType>('bookings');
   const [startDate, setStartDate] = useState('');
@@ -16,11 +32,12 @@ export default function ReportsPage() {
   const [teacherId, setTeacherId] = useState('');
   const [studentId, setStudentId] = useState('');
   const [status, setStatus] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [reportData, setReportData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [teachers, setTeachers] = useState<any[]>([]);
-  const [students, setStudents] = useState<any[]>([]);
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
 
   // Set default dates (last 30 days)
   useEffect(() => {
@@ -125,6 +142,7 @@ export default function ReportsPage() {
           ],
         });
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         yPosition = (doc as any).lastAutoTable.finalY + 10;
 
         // Bookings table
@@ -134,6 +152,7 @@ export default function ReportsPage() {
         autoTable(doc, {
           startY: yPosition,
           head: [['Date', 'Teacher', 'Student', 'Duration', 'Status']],
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           body: reportData.bookings.map((b: any) => [
             new Date(b.date).toLocaleDateString('fr-FR'),
             b.teacher.user.name,
@@ -170,6 +189,7 @@ export default function ReportsPage() {
         autoTable(doc, {
           startY: yPosition,
           head: [['Student', 'Allowed', 'Used', 'Remaining', '%']],
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           body: reportData.students.map((s: any) => [
             s.name,
             `${s.totalAllowed}h`,
@@ -206,6 +226,7 @@ export default function ReportsPage() {
         autoTable(doc, {
           startY: yPosition,
           head: [['Teacher', 'Sessions', 'Hours', 'Students', 'Homework', 'Avg Response']],
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           body: reportData.teachers.map((t: any) => [
             t.name,
             t.totalSessions.toString(),
@@ -427,6 +448,7 @@ export default function ReportsPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     {reportData.students.map((student: any) => (
                       <tr key={student.id}>
                         <td className="px-6 py-4 whitespace-nowrap">

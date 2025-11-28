@@ -27,6 +27,7 @@ export default function UsersPage() {
 
       const data = await response.json();
       // Format users for the table
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formattedUsers = (data.users || []).map((user: any) => ({
         ...user,
         createdAt: new Date(user.createdAt).toISOString(),

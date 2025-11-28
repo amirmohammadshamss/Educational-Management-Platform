@@ -17,6 +17,10 @@ type Student = {
   totalAllowedHours: number;
   usedHours: number;
   teachers: Teacher[];
+  user?: {
+    name: string;
+    email: string;
+  };
 };
 
 type TeacherWithStudents = {
@@ -30,6 +34,23 @@ type TeacherWithStudents = {
     usedHours: number;
     totalAllowedHours: number;
   }>;
+  user?: {
+    name: string;
+    email: string;
+  };
+};
+
+type StudentAPIResponse = {
+  id: string;
+  student?: {
+    id: string;
+    usedHours: number;
+    totalAllowedHours: number;
+    user?: {
+      name: string;
+      email: string;
+    };
+  };
 };
 
 export default function AssignmentsPage() {
@@ -49,7 +70,7 @@ export default function AssignmentsPage() {
 
       // Transform the data to include teacher info
       const studentsWithTeachers = await Promise.all(
-        data.students.map(async (student: any) => {
+        data.students.map(async (student: Student) => {
           // Fetch teachers for this student
           const teachersResponse = await fetch(`/api/students/${student.id}/teachers`);
           let teachers: Teacher[] = [];
@@ -57,7 +78,7 @@ export default function AssignmentsPage() {
           if (teachersResponse.ok) {
             const teachersData = await teachersResponse.json();
             // API returns teachers array with id, name, email directly
-            teachers = (teachersData.teachers || []).map((t: any) => ({
+            teachers = (teachersData.teachers || []).map((t: Teacher) => ({
               id: t.id,
               name: t.name,
               email: t.email,
@@ -94,7 +115,7 @@ export default function AssignmentsPage() {
 
       // Transform the data to include student info
       const teachersWithStudents = await Promise.all(
-        data.teachers.map(async (teacher: any) => {
+        data.teachers.map(async (teacher: TeacherWithStudents) => {
           // Fetch students for this teacher
           const studentsResponse = await fetch(`/api/teachers/${teacher.id}/students`);
           let students: Array<{
@@ -109,7 +130,7 @@ export default function AssignmentsPage() {
             const studentsData = await studentsResponse.json();
             // API returns students array with student object nested
             students =
-              studentsData.students?.map((s: any) => ({
+              studentsData.students?.map((s: StudentAPIResponse) => ({
                 id: s.student?.id || s.id,
                 name: s.student?.user?.name || 'Unknown',
                 email: s.student?.user?.email || '',
@@ -150,6 +171,7 @@ export default function AssignmentsPage() {
   // Initial data fetch
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {

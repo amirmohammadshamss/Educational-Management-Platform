@@ -8,8 +8,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { requireAuth } from '@/lib/auth';
-import { hasPermission, Permission, isAdmin, isTeacher, isStudent } from '@/lib/rbac';
+import { isAdmin } from '@/lib/rbac';
 import { bookingIdParamSchema, updateBookingSchema } from '@/lib/validations/booking';
 import { BookingStatus } from '@prisma/client';
 import { ZodError } from 'zod';
@@ -169,7 +170,7 @@ export async function PATCH(
     }
 
     // Prepare update data
-    const updateData: any = {};
+    const updateData: Prisma.BookingUpdateInput = {};
 
     if (validatedData.date) {
       updateData.date = new Date(validatedData.date);

@@ -7,8 +7,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { requireAuth } from '@/lib/auth';
-import { hasPermission, Permission, isAdmin, isTeacher, isStudent } from '@/lib/rbac';
+import { isAdmin, isTeacher, isStudent } from '@/lib/rbac';
 import { bookingQuerySchema, createBookingSchema } from '@/lib/validations/booking';
 import { BookingStatus } from '@prisma/client';
 import { ZodError } from 'zod';
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
     const validatedQuery = bookingQuerySchema.parse(queryParams);
 
     // Build where clause based on role and filters
-    const where: any = {};
+    const where: Prisma.BookingWhereInput = {};
 
     // Role-based filtering
     if (isStudent(session.user.role)) {

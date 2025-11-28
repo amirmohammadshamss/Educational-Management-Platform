@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
+
+interface DayStats {
+  count: number;
+  hours: number;
+}
+
+interface TeacherBreakdown {
+  sessions: number;
+  hours: number;
+}
 
 export async function GET(
   request: NextRequest,
@@ -14,8 +25,12 @@ export async function GET(
     }
 
     // Check if user is admin
+    if (!session.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const user = await prisma.user.findUnique({
-      where: { email: session.user?.email! },
+      where: { email: session.user.email },
     });
 
     if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
@@ -63,7 +78,7 @@ async function generateBookingsReport(
   studentId: string | null,
   status: string | null
 ) {
-  const whereClause: any = {};
+  const whereClause: Prisma.BookingWhereInput = {};
 
   if (startDate && endDate) {
     whereClause.date = {
@@ -118,7 +133,7 @@ async function generateBookingsReport(
   const totalHours = bookings.reduce((sum, b) => sum + b.duration, 0);
 
   // Group by day
-  const byDay = bookings.reduce((acc: any, booking) => {
+  const byDay = bookings.reduce((acc: Record<string, DayStats>, booking) => {
     const date = booking.date.toISOString().split('T')[0];
     if (!acc[date]) {
       acc[date] = { count: 0, hours: 0 };
@@ -126,10 +141,10 @@ async function generateBookingsReport(
     acc[date].count++;
     acc[date].hours += booking.duration;
     return acc;
-  }, {});
+  }, {} as Record<string, DayStats>);
 
   // Group by teacher
-  const byTeacher = bookings.reduce((acc: any, booking) => {
+  const byTeacher = bookings.reduce((acc: Record<string, DayStats>, booking) => {
     const teacherName = booking.teacher.user.name;
     if (!acc[teacherName]) {
       acc[teacherName] = { count: 0, hours: 0 };
@@ -137,10 +152,10 @@ async function generateBookingsReport(
     acc[teacherName].count++;
     acc[teacherName].hours += booking.duration;
     return acc;
-  }, {});
+  }, {} as Record<string, DayStats>);
 
   // Group by student
-  const byStudent = bookings.reduce((acc: any, booking) => {
+  const byStudent = bookings.reduce((acc: Record<string, DayStats>, booking) => {
     const studentName = booking.student.user.name;
     if (!acc[studentName]) {
       acc[studentName] = { count: 0, hours: 0 };
@@ -148,7 +163,7 @@ async function generateBookingsReport(
     acc[studentName].count++;
     acc[studentName].hours += booking.duration;
     return acc;
-  }, {});
+  }, {} as Record<string, DayStats>);
 
   return NextResponse.json({
     bookings,
@@ -167,7 +182,7 @@ async function generateHoursReport(
   endDate: string | null,
   studentId: string | null
 ) {
-  const whereClause: any = {};
+  const whereClause: Prisma.StudentWhereInput = {};
 
   if (studentId) {
     whereClause.id = studentId;
@@ -234,7 +249,7 @@ async function generateTeacherPerformanceReport(
   endDate: string | null,
   teacherId: string | null
 ) {
-  const whereClause: any = {};
+  const whereClause: Prisma.TeacherWhereInput = {};
 
   if (teacherId) {
     whereClause.id = teacherId;
@@ -329,7 +344,7 @@ async function generateStudentProgressReport(
   endDate: string | null,
   studentId: string | null
 ) {
-  const whereClause: any = {};
+  const whereClause: Prisma.StudentWhereInput = {};
 
   if (studentId) {
     whereClause.id = studentId;
@@ -383,7 +398,7 @@ async function generateStudentProgressReport(
     const totalSessions = student.bookings.length;
     const totalHours = student.bookings.reduce((sum: number, b) => sum + b.duration, 0);
 
-    const teacherBreakdown = student.bookings.reduce((acc: any, booking) => {
+    const teacherBreakdown = student.bookings.reduce((acc: Record<string, TeacherBreakdown>, booking) => {
       const teacherName = booking.teacher.user.name;
       if (!acc[teacherName]) {
         acc[teacherName] = { sessions: 0, hours: 0 };
@@ -391,7 +406,7 @@ async function generateStudentProgressReport(
       acc[teacherName].sessions++;
       acc[teacherName].hours += booking.duration;
       return acc;
-    }, {});
+    }, {} as Record<string, TeacherBreakdown>);
 
     const homeworkStats = {
       total: student.homeworkSubmitted.length,

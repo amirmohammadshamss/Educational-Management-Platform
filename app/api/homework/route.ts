@@ -6,8 +6,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth';
-import { isAdmin, isTeacher, isStudent } from '@/lib/rbac';
+import { isTeacher, isStudent } from '@/lib/rbac';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { homeworkQuerySchema } from '@/lib/validations/homework';
 import { ZodError } from 'zod';
 
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest) {
     const validatedQuery = homeworkQuerySchema.parse(queryParams);
 
     // Build where clause based on role
-    const where: any = {};
+    const where: Prisma.HomeworkWhereInput = {};
 
     if (isStudent(session.user.role)) {
       // Students can only see their own homework
