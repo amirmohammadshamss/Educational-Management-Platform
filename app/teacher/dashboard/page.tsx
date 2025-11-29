@@ -53,7 +53,7 @@ function MetricCard({
           <p className="text-3xl font-bold">{value}</p>
         </div>
       </div>
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <Link
           href={linkTo}
           className="text-sm font-medium hover:underline inline-flex items-center"
@@ -73,7 +73,7 @@ function MetricCard({
             />
           </svg>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -142,7 +142,7 @@ export default async function TeacherDashboardPage() {
           </p>
         </div>
 
-        {/* Quick Action Buttons */}
+        {/* Quick Action Buttons
         <div className="mb-8 flex flex-wrap gap-3">
           <Link
             href="/teacher/schedule"
@@ -203,7 +203,7 @@ export default async function TeacherDashboardPage() {
             </svg>
             Review Homework
           </Link>
-        </div>
+        </div> */}
 
         {/* Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

@@ -45,8 +45,19 @@ export default function HoursReport({ data }: HoursReportProps) {
   const [sortBy, setSortBy] = useState<'name' | 'percentage' | 'remaining' | 'used'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
+  // Ensure students is always an array
+  const students = Array.isArray(data?.students) ? data.students : [];
+
+  // Ensure summary exists with defaults
+  const summary = data?.summary || {
+    totalStudents: 0,
+    lowHoursCount: 0,
+    totalHoursAllocated: 0,
+    totalHoursUsed: 0,
+  };
+
   // Sort students
-  const sortedStudents = [...data.students].sort((a, b) => {
+  const sortedStudents = [...students].sort((a, b) => {
     let compareValue = 0;
 
     switch (sortBy) {
@@ -159,18 +170,18 @@ export default function HoursReport({ data }: HoursReportProps) {
   const utilizationData = [
     {
       name: 'Used',
-      value: data.summary.totalHoursUsed,
+      value: summary.totalHoursUsed,
       color: '#3B82F6',
     },
     {
       name: 'Remaining',
-      value: data.summary.totalHoursAllocated - data.summary.totalHoursUsed,
+      value: summary.totalHoursAllocated - summary.totalHoursUsed,
       color: '#10B981',
     },
   ];
 
   // Top 10 students by usage
-  const topStudents = [...data.students]
+  const topStudents = [...students]
     .sort((a, b) => b.percentage - a.percentage)
     .slice(0, 10)
     .map((s) => ({
@@ -187,6 +198,16 @@ export default function HoursReport({ data }: HoursReportProps) {
     }
   };
 
+  // Empty state
+  if (students.length === 0) {
+    return (
+      <div className="bg-white p-12 rounded-lg shadow text-center">
+        <p className="text-gray-500 text-lg">No student data available for the selected period.</p>
+        <p className="text-gray-400 text-sm mt-2">Try adjusting your date range or filters.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
@@ -194,25 +215,25 @@ export default function HoursReport({ data }: HoursReportProps) {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Total Students</h3>
           <p className="text-3xl font-bold text-gray-900 mt-2">
-            {data.summary.totalStudents}
+            {summary.totalStudents}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Low Hours Alert</h3>
           <p className="text-3xl font-bold text-red-600 mt-2">
-            {data.summary.lowHoursCount}
+            {summary.lowHoursCount}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Total Allocated</h3>
           <p className="text-3xl font-bold text-gray-900 mt-2">
-            {data.summary.totalHoursAllocated.toFixed(0)}h
+            {(summary.totalHoursAllocated || 0).toFixed(0)}h
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Total Used</h3>
           <p className="text-3xl font-bold text-blue-600 mt-2">
-            {data.summary.totalHoursUsed.toFixed(0)}h
+            {(summary.totalHoursUsed || 0).toFixed(0)}h
           </p>
         </div>
       </div>
@@ -273,10 +294,10 @@ export default function HoursReport({ data }: HoursReportProps) {
       </div>
 
       {/* Students Low on Hours */}
-      {data.summary.lowHoursCount > 0 && (
+      {summary.lowHoursCount > 0 && (
         <div className="bg-red-50 border border-red-200 p-6 rounded-lg">
           <h3 className="text-lg font-semibold text-red-900 mb-4">
-            Students Running Low on Hours ({data.summary.lowHoursCount})
+            Students Running Low on Hours ({summary.lowHoursCount})
           </h3>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-red-200">

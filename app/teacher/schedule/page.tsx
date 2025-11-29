@@ -233,11 +233,7 @@ export default function TeacherSchedulePage() {
               </button>
             )}
           </div>
-
-          {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Date Range Presets */}
-            <div>
+            <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Quick Date Range
               </label>
@@ -268,6 +264,10 @@ export default function TeacherSchedulePage() {
                 </button>
               </div>
             </div>
+          {/* Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Date Range Presets */}
+
 
             {/* Start Date */}
             <div>

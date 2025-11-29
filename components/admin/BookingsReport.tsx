@@ -50,9 +50,19 @@ export default function BookingsReport({ data }: BookingsReportProps) {
   const [groupBy, setGroupBy] = useState<'day' | 'week' | 'month'>('day');
   const [chartType, setChartType] = useState<'bar' | 'line'>('bar');
 
+  // Ensure bookings and statistics exist with defaults
+  const bookings = Array.isArray(data?.bookings) ? data.bookings : [];
+  const statistics = data?.statistics || {
+    totalSessions: 0,
+    totalHours: 0,
+    byDay: {},
+    byTeacher: {},
+    byStudent: {},
+  };
+
   // Prepare chart data based on grouping
   const prepareChartData = () => {
-    const { byDay } = data.statistics;
+    const { byDay } = statistics;
 
     if (groupBy === 'day') {
       return Object.entries(byDay).map(([date, stats]) => ({
@@ -100,10 +110,20 @@ export default function BookingsReport({ data }: BookingsReportProps) {
     }));
   };
 
+  // Empty state
+  if (bookings.length === 0) {
+    return (
+      <div className="bg-white p-12 rounded-lg shadow text-center">
+        <p className="text-gray-500 text-lg">No booking data available for the selected period.</p>
+        <p className="text-gray-400 text-sm mt-2">Try adjusting your date range or filters.</p>
+      </div>
+    );
+  }
+
   const chartData = prepareChartData();
 
   // Prepare teacher breakdown data
-  const teacherData = Object.entries(data.statistics.byTeacher).map(
+  const teacherData = Object.entries(statistics.byTeacher).map(
     ([name, stats]) => ({
       name,
       sessions: stats.count,
@@ -112,7 +132,7 @@ export default function BookingsReport({ data }: BookingsReportProps) {
   );
 
   // Prepare student breakdown data
-  const studentData = Object.entries(data.statistics.byStudent).map(
+  const studentData = Object.entries(statistics.byStudent).map(
     ([name, stats]) => ({
       name,
       sessions: stats.count,
@@ -127,13 +147,13 @@ export default function BookingsReport({ data }: BookingsReportProps) {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Total Sessions</h3>
           <p className="text-3xl font-bold text-gray-900 mt-2">
-            {data.statistics.totalSessions}
+            {statistics.totalSessions}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Total Hours</h3>
           <p className="text-3xl font-bold text-gray-900 mt-2">
-            {data.statistics.totalHours.toFixed(1)}h
+            {(statistics.totalHours || 0).toFixed(1)}h
           </p>
         </div>
       </div>
@@ -324,7 +344,7 @@ export default function BookingsReport({ data }: BookingsReportProps) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {data.bookings.map((booking) => (
+              {bookings.map((booking) => (
                 <tr key={booking.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {new Date(booking.date).toLocaleDateString('fr-FR')}

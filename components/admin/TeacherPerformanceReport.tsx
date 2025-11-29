@@ -55,8 +55,19 @@ export default function TeacherPerformanceReport({
   >('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
+  // Ensure teachers is always an array
+  const teachers = Array.isArray(data?.teachers) ? data.teachers : [];
+
+  // Ensure summary exists with defaults
+  const summary = data?.summary || {
+    totalTeachers: 0,
+    totalSessions: 0,
+    totalHours: 0,
+    totalHomeworkReviewed: 0,
+  };
+
   // Sort teachers
-  const sortedTeachers = [...data.teachers].sort((a, b) => {
+  const sortedTeachers = [...teachers].sort((a, b) => {
     let compareValue = 0;
 
     switch (sortBy) {
@@ -103,7 +114,7 @@ export default function TeacherPerformanceReport({
   }));
 
   // Top performer radar chart (top 5 teachers)
-  const topTeachers = [...data.teachers]
+  const topTeachers = [...teachers]
     .sort((a, b) => b.totalSessions - a.totalSessions)
     .slice(0, 5);
 
@@ -150,6 +161,16 @@ export default function TeacherPerformanceReport({
 
   const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
+  // Empty state
+  if (teachers.length === 0) {
+    return (
+      <div className="bg-white p-12 rounded-lg shadow text-center">
+        <p className="text-gray-500 text-lg">No teacher data available for the selected period.</p>
+        <p className="text-gray-400 text-sm mt-2">Try adjusting your date range or filters.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
@@ -157,25 +178,25 @@ export default function TeacherPerformanceReport({
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Total Teachers</h3>
           <p className="text-3xl font-bold text-gray-900 mt-2">
-            {data.summary.totalTeachers}
+            {summary.totalTeachers}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Total Sessions</h3>
           <p className="text-3xl font-bold text-blue-600 mt-2">
-            {data.summary.totalSessions}
+            {summary.totalSessions}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Total Hours</h3>
           <p className="text-3xl font-bold text-green-600 mt-2">
-            {data.summary.totalHours.toFixed(1)}h
+            {(summary.totalHours || 0).toFixed(1)}h
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-sm font-medium text-gray-500">Homework Reviewed</h3>
           <p className="text-3xl font-bold text-purple-600 mt-2">
-            {data.summary.totalHomeworkReviewed}
+            {summary.totalHomeworkReviewed}
           </p>
         </div>
       </div>
@@ -354,11 +375,11 @@ export default function TeacherPerformanceReport({
               Most Active Teacher
             </h4>
             <p className="text-lg font-semibold text-blue-900">
-              {[...data.teachers].sort((a, b) => b.totalSessions - a.totalSessions)[0]
+              {[...teachers].sort((a, b) => b.totalSessions - a.totalSessions)[0]
                 ?.name || 'N/A'}
             </p>
             <p className="text-sm text-blue-700">
-              {[...data.teachers].sort((a, b) => b.totalSessions - a.totalSessions)[0]
+              {[...teachers].sort((a, b) => b.totalSessions - a.totalSessions)[0]
                 ?.totalSessions || 0}{' '}
               sessions
             </p>
@@ -368,11 +389,11 @@ export default function TeacherPerformanceReport({
               Most Hours Taught
             </h4>
             <p className="text-lg font-semibold text-blue-900">
-              {[...data.teachers].sort((a, b) => b.totalHours - a.totalHours)[0]
+              {[...teachers].sort((a, b) => b.totalHours - a.totalHours)[0]
                 ?.name || 'N/A'}
             </p>
             <p className="text-sm text-blue-700">
-              {[...data.teachers].sort((a, b) => b.totalHours - a.totalHours)[0]
+              {[...teachers].sort((a, b) => b.totalHours - a.totalHours)[0]
                 ?.totalHours.toFixed(1) || 0}
               h
             </p>
@@ -382,13 +403,13 @@ export default function TeacherPerformanceReport({
               Fastest Response Time
             </h4>
             <p className="text-lg font-semibold text-blue-900">
-              {[...data.teachers]
+              {[...teachers]
                 .filter((t) => t.avgResponseTimeHours > 0)
                 .sort((a, b) => a.avgResponseTimeHours - b.avgResponseTimeHours)[0]
                 ?.name || 'N/A'}
             </p>
             <p className="text-sm text-blue-700">
-              {[...data.teachers]
+              {[...teachers]
                 .filter((t) => t.avgResponseTimeHours > 0)
                 .sort((a, b) => a.avgResponseTimeHours - b.avgResponseTimeHours)[0]
                 ?.avgResponseTimeHours.toFixed(1) || 0}

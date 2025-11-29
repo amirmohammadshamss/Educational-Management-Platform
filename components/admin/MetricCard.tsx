@@ -127,7 +127,7 @@ export default function MetricCard({
         </div>
       )}
 
-      {/* Link */}
+      {/* Link
       {linkTo && (
         <Link
           href={linkTo}
@@ -148,7 +148,7 @@ export default function MetricCard({
             />
           </svg>
         </Link>
-      )}
+      )} */}
     </div>
   );
 }

@@ -137,8 +137,8 @@ export default function ReportsPage() {
           startY: yPosition,
           head: [['Metric', 'Value']],
           body: [
-            ['Total Sessions', reportData.statistics.totalSessions.toString()],
-            ['Total Hours', `${reportData.statistics.totalHours.toFixed(1)}h`],
+            ['Total Sessions', (reportData.statistics?.totalSessions || 0).toString()],
+            ['Total Hours', `${(reportData.statistics?.totalHours || 0).toFixed(1)}h`],
           ],
         });
 
@@ -153,7 +153,7 @@ export default function ReportsPage() {
           startY: yPosition,
           head: [['Date', 'Teacher', 'Student', 'Duration', 'Status']],
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          body: reportData.bookings.map((b: any) => [
+          body: (reportData.bookings || []).map((b: any) => [
             new Date(b.date).toLocaleDateString('fr-FR'),
             b.teacher.user.name,
             b.student.user.name,
@@ -173,10 +173,10 @@ export default function ReportsPage() {
           startY: yPosition,
           head: [['Metric', 'Value']],
           body: [
-            ['Total Students', reportData.summary.totalStudents.toString()],
-            ['Students with Low Hours', reportData.summary.lowHoursCount.toString()],
-            ['Total Allocated', `${reportData.summary.totalHoursAllocated}h`],
-            ['Total Used', `${reportData.summary.totalHoursUsed.toFixed(1)}h`],
+            ['Total Students', (reportData.summary?.totalStudents || 0).toString()],
+            ['Students with Low Hours', (reportData.summary?.lowHoursCount || 0).toString()],
+            ['Total Allocated', `${reportData.summary?.totalHoursAllocated || 0}h`],
+            ['Total Used', `${(reportData.summary?.totalHoursUsed || 0).toFixed(1)}h`],
           ],
         });
 
@@ -190,7 +190,7 @@ export default function ReportsPage() {
           startY: yPosition,
           head: [['Student', 'Allowed', 'Used', 'Remaining', '%']],
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          body: reportData.students.map((s: any) => [
+          body: (reportData.students || []).map((s: any) => [
             s.name,
             `${s.totalAllowed}h`,
             `${s.used.toFixed(1)}h`,
@@ -210,10 +210,10 @@ export default function ReportsPage() {
           startY: yPosition,
           head: [['Metric', 'Value']],
           body: [
-            ['Total Teachers', reportData.summary.totalTeachers.toString()],
-            ['Total Sessions', reportData.summary.totalSessions.toString()],
-            ['Total Hours', `${reportData.summary.totalHours.toFixed(1)}h`],
-            ['Homework Reviewed', reportData.summary.totalHomeworkReviewed.toString()],
+            ['Total Teachers', (reportData.summary?.totalTeachers || 0).toString()],
+            ['Total Sessions', (reportData.summary?.totalSessions || 0).toString()],
+            ['Total Hours', `${(reportData.summary?.totalHours || 0).toFixed(1)}h`],
+            ['Homework Reviewed', (reportData.summary?.totalHomeworkReviewed || 0).toString()],
           ],
         });
 
@@ -227,7 +227,7 @@ export default function ReportsPage() {
           startY: yPosition,
           head: [['Teacher', 'Sessions', 'Hours', 'Students', 'Homework', 'Avg Response']],
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          body: reportData.teachers.map((t: any) => [
+          body: (reportData.teachers || []).map((t: any) => [
             t.name,
             t.totalSessions.toString(),
             `${t.totalHours.toFixed(1)}h`,
@@ -426,30 +426,31 @@ export default function ReportsPage() {
           {reportType === 'student-progress' && (
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-lg font-semibold mb-4">Student Progress</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Student
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Sessions
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Hours
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Homework
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Hours Utilization
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                    {reportData.students.map((student: any) => (
+              {reportData.students && reportData.students.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Student
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Sessions
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Hours
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Homework
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Hours Utilization
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      {reportData.students.map((student: any) => (
                       <tr key={student.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
@@ -487,10 +488,16 @@ export default function ReportsPage() {
                           </div>
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="p-12 text-center">
+                  <p className="text-gray-500">No student data available for the selected period.</p>
+                  <p className="text-gray-400 text-sm mt-2">Try adjusting your date range or filters.</p>
+                </div>
+              )}
             </div>
           )}
         </div>
