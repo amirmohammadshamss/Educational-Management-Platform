@@ -37,6 +37,16 @@ enum SyncStatus {
   IN_PROGRESS
 }
 
+enum NotificationType {
+  HOMEWORK_REVIEWED
+  HOMEWORK_SUBMITTED
+  CLASS_REMINDER
+  LOW_HOURS
+  ASSIGNMENT
+  STUDENT_ASSIGNED
+  SYSTEM
+}
+
 // User Model - Core authentication and profile
 model User {
   id           String   @id @default(cuid())
@@ -49,8 +59,9 @@ model User {
   updatedAt    DateTime @updatedAt
 
   // Relations
-  teacher Teacher?
-  student Student?
+  teacher       Teacher?
+  student       Student?
+  notifications Notification[]
 
   @@index([email])
   @@index([role])
@@ -69,6 +80,7 @@ model Teacher {
   students         StudentTeacher[]
   bookings         Booking[]
   homeworkAssigned Homework[]
+  sharedFiles      SharedFile[]
 
   @@index([userId])
   @@map("teachers")
@@ -173,4 +185,43 @@ model SyncLog {
   @@index([status])
   @@index([lastSyncTime])
   @@map("sync_logs")
+}
+
+// Notification Model - In-app notifications for users
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  link      String? // Optional link to related resource
+  createdAt DateTime         @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@index([type])
+  @@map("notifications")
+}
+
+// SharedFile Model - Files shared by teachers with students
+model SharedFile {
+  id          String   @id @default(cuid())
+  teacherId   String
+  fileName    String
+  fileUrl     String // URL to the file in Vercel Blob Storage
+  fileSize    Int // File size in bytes
+  description String?
+  uploadedAt  DateTime @default(now())
+
+  // Relations
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([teacherId])
+  @@index([uploadedAt])
+  @@map("shared_files")
 }
