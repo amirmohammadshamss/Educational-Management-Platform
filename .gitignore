@@ -74,3 +74,6 @@ build/
 # Vercel Blob Storage (local testing)
 .vercel-storage/
 /.VSCodeCounter
+
+# Local file uploads (development)
+/public/uploads/

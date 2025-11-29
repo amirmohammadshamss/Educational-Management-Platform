@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth-options';
 import { prisma } from '@/lib/prisma';
 import { logger } from '@/lib/logger';
 
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Verify user is authenticated and is an admin
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
       return NextResponse.json(
@@ -195,7 +196,7 @@ export async function POST(request: NextRequest) {
  * GET method returns information about the endpoint
  */
 export async function GET(request: NextRequest) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
   if (!session || !session.user) {
     return NextResponse.json(
