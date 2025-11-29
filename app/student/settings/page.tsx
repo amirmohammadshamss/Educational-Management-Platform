@@ -144,41 +144,9 @@ export default function StudentSettingsPage() {
                     </p>
                   </div>
 
-                  {/* Timezone Preference */}
-                  <div>
-                    <label htmlFor="timezone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Fuseau horaire
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Clock className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <select
-                        id="timezone"
-                        value={timezone}
-                        onChange={(e) => handleTimezoneChange(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        <option value="Europe/Paris">Europe/Paris (GMT+1)</option>
-                        <option value="Europe/London">Europe/London (GMT+0)</option>
-                        <option value="America/New_York">America/New York (GMT-5)</option>
-                        <option value="America/Los_Angeles">America/Los Angeles (GMT-8)</option>
-                        <option value="Asia/Tokyo">Asia/Tokyo (GMT+9)</option>
-                      </select>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Les dates et heures seront affichées selon ce fuseau horaire
-                    </p>
-                  </div>
+          
 
-                  {/* Info Box */}
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm text-blue-900 font-medium mb-1">Note</p>
-                    <p className="text-sm text-blue-800">
-                      Les modifications de langue et de fuseau horaire sont appliquées immédiatement.
-                      Certaines pages peuvent nécessiter un rechargement pour afficher les changements.
-                    </p>
-                  </div>
+  
 
                   {/* Save Button (for future use) */}
                   <button

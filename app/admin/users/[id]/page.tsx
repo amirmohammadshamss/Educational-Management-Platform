@@ -266,43 +266,15 @@ export default function UserDetailPage() {
                         {user.active ? 'Active' : 'Inactive'}
                       </span>
                     </div>
-                  </div>
-                </div>
 
-                {/* Metadata */}
-                <div className="pt-6 border-t">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Metadata</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
+                         <div>
                       <label className="block text-sm font-medium text-gray-600 mb-1">User ID</label>
                       <p className="text-gray-900 font-mono text-sm">{user.id}</p>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Created At</label>
-                      <p className="text-gray-900">
-                        {new Date(user.createdAt).toLocaleString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">Last Updated</label>
-                      <p className="text-gray-900">
-                        {new Date(user.updatedAt).toLocaleString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
-                    </div>
                   </div>
                 </div>
+
+    
               </div>
             </div>
           )}

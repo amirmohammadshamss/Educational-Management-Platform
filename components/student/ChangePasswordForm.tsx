@@ -248,15 +248,17 @@ export default function ChangePasswordForm() {
             )}
           </button>
         </div>
-        {confirmPassword && newPassword !== confirmPassword && (
-          <p className="text-xs text-red-600 mt-1">Les mots de passe ne correspondent pas</p>
-        )}
-        {confirmPassword && newPassword === confirmPassword && (
-          <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-            <CheckCircle className="h-3 w-3" />
-            Les mots de passe correspondent
-          </p>
-        )}
+        <div className="mt-1">
+          {confirmPassword && newPassword !== confirmPassword && (
+            <p className="text-xs text-red-600">Les mots de passe ne correspondent pas</p>
+          )}
+          {confirmPassword && newPassword === confirmPassword && (
+            <p className="text-xs text-green-600 flex items-center gap-1">
+              <CheckCircle className="h-3 w-3" />
+              Les mots de passe correspondent
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Error Message */}
