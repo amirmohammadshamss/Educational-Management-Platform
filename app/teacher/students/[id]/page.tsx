@@ -220,9 +220,9 @@ export default function TeacherStudentDetailPage() {
 
         {/* Header */}
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-8">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
+          <div className="flex flex-row  justify-between">
+          
+              <div className="flex  items-center gap-3 mb-2">
                 <h1 className="text-3xl font-bold text-gray-900">
                   {student.name}
                 </h1>
@@ -238,17 +238,9 @@ export default function TeacherStudentDetailPage() {
                 )}
               </div>
               <p className="text-gray-600 mb-4">{student.email}</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div>
-                  <span className="font-medium text-gray-700">Government ID:</span>
-                  <p className="text-gray-900">{student.governmentId}</p>
-                </div>
-                <div>
-                  <span className="font-medium text-gray-700">Member since:</span>
-                  <p className="text-gray-900">{formatDate(student.createdAt)}</p>
-                </div>
-                {student.assignedAt && (
-                  <div>
+
+               {student.assignedAt && (
+                  <div className="flex flex-row gap-6">
                     <span className="font-medium text-gray-700">
                       Assigned to you:
                     </span>
@@ -257,8 +249,18 @@ export default function TeacherStudentDetailPage() {
                     </p>
                   </div>
                 )}
-              </div>
-            </div>
+              {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm"> */}
+                {/* <div>
+                  <span className="font-medium text-gray-700">Government ID:</span>
+                  <p className="text-gray-900">{student.governmentId}</p>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Member since:</span>
+                  <p className="text-gray-900">{formatDate(student.createdAt)}</p>
+                </div> */}
+               
+              {/* </div> */}
+           
           </div>
         </div>
 

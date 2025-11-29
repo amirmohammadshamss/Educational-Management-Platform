@@ -261,7 +261,7 @@ export default async function TeacherDashboardPage() {
         </div>
 
         {/* Assigned Students - Full Width */}
-        <div>
+        {/* <div>
           <AssignedStudentsWidget
             students={dashboardData.students.assigned}
             lowHoursCount={dashboardData.students.lowHoursCount}
@@ -269,7 +269,7 @@ export default async function TeacherDashboardPage() {
               dashboardData.students.manyPendingHomeworkCount
             }
           />
-        </div>
+        </div> */}
 
         {/* Recent Activity Feed */}
         <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm p-6">

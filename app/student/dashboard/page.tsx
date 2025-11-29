@@ -119,7 +119,7 @@ export default function StudentDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Link
+          {/* <Link
             href="/student/schedule"
             className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-2 border-transparent hover:border-blue-500"
           >
@@ -130,8 +130,8 @@ export default function StudentDashboard() {
               <h3 className="font-semibold text-gray-900">Emploi du temps</h3>
               <p className="text-sm text-gray-600">Voir mes cours</p>
             </div>
-          </Link>
-
+          </Link> */}
+{/* 
           <Link
             href="/student/homework/submit"
             className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-2 border-transparent hover:border-green-500"
@@ -143,8 +143,8 @@ export default function StudentDashboard() {
               <h3 className="font-semibold text-gray-900">Soumettre devoir</h3>
               <p className="text-sm text-gray-600">Nouveau devoir</p>
             </div>
-          </Link>
-
+          </Link> */}
+{/* 
           <Link
             href="/student/resources"
             className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-2 border-transparent hover:border-purple-500"
@@ -156,7 +156,7 @@ export default function StudentDashboard() {
               <h3 className="font-semibold text-gray-900">Ressources</h3>
               <p className="text-sm text-gray-600">Documents partagés</p>
             </div>
-          </Link>
+          </Link> */}
         </div>
 
         {/* Hours Summary */}

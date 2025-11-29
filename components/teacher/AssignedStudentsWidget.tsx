@@ -166,7 +166,7 @@ export default function AssignedStudentsWidget({
         </div>
       )}
 
-      {/* Content */}
+{/*      
       <div className="p-6">
         {students.length === 0 ? (
           <div className="text-center py-8">
@@ -189,7 +189,7 @@ export default function AssignedStudentsWidget({
           </div>
         ) : (
           <>
-            {/* Students list */}
+       
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {sortedStudents.map((student) => {
                 const hoursPercentage =
@@ -207,7 +207,7 @@ export default function AssignedStudentsWidget({
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
-                      {/* Student info */}
+                    
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <p className="font-medium text-gray-900 truncate">
@@ -223,7 +223,7 @@ export default function AssignedStudentsWidget({
                           {student.email}
                         </p>
 
-                        {/* Hours progress bar */}
+                        
                         <div className="mb-2">
                           <div className="flex items-center justify-between text-xs mb-1">
                             <span className="text-gray-600">Training Hours</span>
@@ -253,7 +253,7 @@ export default function AssignedStudentsWidget({
                           </p>
                         </div>
 
-                        {/* Pending homework count */}
+                     
                         {student.pendingHomeworkCount > 0 && (
                           <div className="flex items-center gap-1 text-xs text-orange-600 mt-2">
                             <svg
@@ -284,7 +284,7 @@ export default function AssignedStudentsWidget({
               })}
             </div>
 
-            {/* View all link */}
+          
             <div className="mt-6 pt-4 border-t border-gray-200">
               <Link
                 href="/teacher/students"
@@ -308,7 +308,8 @@ export default function AssignedStudentsWidget({
             </div>
           </>
         )}
-      </div>
+      </div> */}
+      
     </div>
   );
 }
