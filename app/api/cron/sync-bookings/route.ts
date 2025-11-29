@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
     ];
 
     // Determine final status
-    const finalStatus = allErrors.length === 0 ? 'SUCCESS' : 'PARTIAL_SUCCESS';
+    const finalStatus = allErrors.length === 0 ? 'SUCCESS' : 'FAILED';
     const elapsedTime = Date.now() - startTime;
 
     // Update sync log with final results

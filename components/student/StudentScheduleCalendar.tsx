@@ -27,7 +27,7 @@ interface Booking {
   location?: string;
   teacher: {
     user: {
-      name: string;
+      name: string | null;
       email?: string;
       phone?: string;
     };
@@ -165,7 +165,7 @@ export default function StudentScheduleCalendar({ bookings }: StudentScheduleCal
                     <div
                       key={booking.id}
                       className={`text-xs text-white rounded px-1 py-0.5 truncate ${getBookingColor(booking)}`}
-                      title={`${format(new Date(booking.date), 'HH:mm')} - ${booking.teacher.user.name}`}
+                      title={`${format(new Date(booking.date), 'HH:mm')} - ${booking.teacher.user.name || 'N/A'}`}
                     >
                       {format(new Date(booking.date), 'HH:mm')}
                     </div>

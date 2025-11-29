@@ -169,7 +169,7 @@ export async function updateStudentUsedHours(prisma: any): Promise<{ updated: nu
         });
 
         const totalMinutes = completedBookings.reduce(
-          (sum, booking) => sum + booking.duration,
+          (sum: number, booking: { duration: number }) => sum + booking.duration,
           0
         );
         const totalHours = Math.round((totalMinutes / 60) * 100) / 100; // Round to 2 decimals

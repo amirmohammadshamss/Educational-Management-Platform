@@ -13,7 +13,7 @@ interface BookingCardProps {
     location?: string;
     teacher: {
       user: {
-        name: string;
+        name: string | null;
         email?: string;
         phone?: string;
       };
@@ -65,7 +65,7 @@ CONFIRMATION DE RÉSERVATION
 Date: ${format(bookingDate, 'EEEE d MMMM yyyy', { locale: fr })}
 Heure: ${format(bookingDate, 'HH:mm')} - ${format(endTime, 'HH:mm')}
 Durée: ${booking.duration} minutes
-Professeur: ${booking.teacher.user.name}
+Professeur: ${booking.teacher.user.name || 'N/A'}
 ${booking.teacher.user.email ? `Email: ${booking.teacher.user.email}` : ''}
 ${booking.teacher.user.phone ? `Téléphone: ${booking.teacher.user.phone}` : ''}
 ${booking.location ? `Lieu: ${booking.location}` : ''}
@@ -142,7 +142,7 @@ Numéro de réservation: ${booking.id}
           </div>
           <div class="detail">
             <div class="label">Professeur:</div>
-            <div class="value">${booking.teacher.user.name}</div>
+            <div class="value">${booking.teacher.user.name || 'N/A'}</div>
           </div>
           ${booking.teacher.user.email ? `
           <div class="detail">
@@ -217,7 +217,7 @@ Numéro de réservation: ${booking.id}
           <User className="h-5 w-5 text-gray-400" />
           <div>
             <p className="text-sm text-gray-500">Professeur</p>
-            <p className="font-medium text-gray-900">{booking.teacher.user.name}</p>
+            <p className="font-medium text-gray-900">{booking.teacher.user.name || 'N/A'}</p>
           </div>
         </div>
 

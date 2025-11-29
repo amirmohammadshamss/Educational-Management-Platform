@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Determine final status
-    const finalStatus = calculationResult.errors.length === 0 ? 'SUCCESS' : 'PARTIAL_SUCCESS';
+    const finalStatus = calculationResult.errors.length === 0 ? 'SUCCESS' : 'FAILED';
     const elapsedTime = Date.now() - startTime;
 
     // Check if execution took too long (warning threshold: 30 seconds)

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
+import { Prisma, BookingStatus } from '@prisma/client';
 
 interface DayStats {
   count: number;
@@ -96,7 +96,7 @@ async function generateBookingsReport(
   }
 
   if (status) {
-    whereClause.status = status;
+    whereClause.status = status as BookingStatus;
   }
 
   const bookings = await prisma.booking.findMany({
@@ -145,7 +145,7 @@ async function generateBookingsReport(
 
   // Group by teacher
   const byTeacher = bookings.reduce((acc: Record<string, DayStats>, booking) => {
-    const teacherName = booking.teacher.user.name;
+    const teacherName = booking.teacher.user.name || 'Unknown';
     if (!acc[teacherName]) {
       acc[teacherName] = { count: 0, hours: 0 };
     }
@@ -156,7 +156,7 @@ async function generateBookingsReport(
 
   // Group by student
   const byStudent = bookings.reduce((acc: Record<string, DayStats>, booking) => {
-    const studentName = booking.student.user.name;
+    const studentName = booking.student.user.name || 'Unknown';
     if (!acc[studentName]) {
       acc[studentName] = { count: 0, hours: 0 };
     }
@@ -399,7 +399,7 @@ async function generateStudentProgressReport(
     const totalHours = student.bookings.reduce((sum: number, b) => sum + b.duration, 0);
 
     const teacherBreakdown = student.bookings.reduce((acc: Record<string, TeacherBreakdown>, booking) => {
-      const teacherName = booking.teacher.user.name;
+      const teacherName = booking.teacher.user.name || 'Unknown';
       if (!acc[teacherName]) {
         acc[teacherName] = { sessions: 0, hours: 0 };
       }

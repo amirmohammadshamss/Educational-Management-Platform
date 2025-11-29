@@ -32,12 +32,10 @@ export async function POST(request: NextRequest) {
     // Parse form data
     const formData = await request.formData();
     const teacherId = formData.get('teacherId') as string;
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
     const file = formData.get('file') as File;
 
     // Validation
-    if (!teacherId || !title || !file) {
+    if (!teacherId || !file) {
       return NextResponse.json(
         { error: 'Tous les champs obligatoires doivent être remplis' },
         { status: 400 }
@@ -105,8 +103,6 @@ export async function POST(request: NextRequest) {
       data: {
         studentId,
         teacherId,
-        title,
-        description: description || null,
         fileUrl: blob.url,
         fileName: file.name,
         fileSize: file.size,
@@ -130,7 +126,7 @@ export async function POST(request: NextRequest) {
       success: true,
       homework: {
         id: homework.id,
-        title: homework.title,
+        fileName: homework.fileName,
         status: homework.status,
         submittedAt: homework.submittedAt,
       },

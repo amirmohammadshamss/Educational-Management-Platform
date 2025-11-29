@@ -18,12 +18,12 @@ interface Booking {
   status: BookingStatus;
   student: {
     user: {
-      name: string;
+      name: string | null;
     };
   };
   teacher: {
     user: {
-      name: string;
+      name: string | null;
     };
   };
 }
@@ -130,10 +130,10 @@ export default function TodaysBookings({ bookings }: TodaysBookingsProps) {
                     {formatTime(booking.date)}
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {booking.student.user.name}
+                    {booking.student.user.name || 'N/A'}
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {booking.teacher.user.name}
+                    {booking.teacher.user.name || 'N/A'}
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
                     {booking.duration}h

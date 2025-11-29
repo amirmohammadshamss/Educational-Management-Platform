@@ -6,8 +6,6 @@ import { fr } from 'date-fns/locale';
 
 interface Homework {
   id: string;
-  title: string;
-  description: string | null;
   fileUrl: string;
   fileName: string;
   fileSize: number;
@@ -17,7 +15,7 @@ interface Homework {
   reviewedAt: string | null;
   teacher: {
     user: {
-      name: string;
+      name: string | null;
     };
   };
 }
@@ -124,18 +122,8 @@ export default function HomeworkFeedbackModal({
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Informations du devoir</h3>
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div>
-                <p className="text-sm text-gray-600">Titre</p>
-                <p className="font-medium text-gray-900">{homework.title}</p>
-              </div>
-              {homework.description && (
-                <div>
-                  <p className="text-sm text-gray-600">Description</p>
-                  <p className="text-gray-900">{homework.description}</p>
-                </div>
-              )}
-              <div>
                 <p className="text-sm text-gray-600">Professeur</p>
-                <p className="font-medium text-gray-900">{homework.teacher.user.name}</p>
+                <p className="font-medium text-gray-900">{homework.teacher.user.name || 'N/A'}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Date de soumission</p>

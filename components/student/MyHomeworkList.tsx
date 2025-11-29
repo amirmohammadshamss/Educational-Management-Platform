@@ -6,8 +6,6 @@ import { fr } from 'date-fns/locale';
 
 interface Homework {
   id: string;
-  title: string;
-  description: string | null;
   fileUrl: string;
   fileName: string;
   fileSize: number;
@@ -17,7 +15,7 @@ interface Homework {
   reviewedAt: string | null;
   teacher: {
     user: {
-      name: string;
+      name: string | null;
     };
   };
 }
@@ -131,14 +129,11 @@ export default function MyHomeworkList({ homeworks, onViewFeedback }: MyHomework
                   <div className="flex items-start gap-3 mb-2">
                     {getStatusIcon(homework.status)}
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">{homework.title}</h3>
-                      {homework.description && (
-                        <p className="text-sm text-gray-600 mt-1">{homework.description}</p>
-                      )}
+                      <h3 className="text-lg font-semibold text-gray-900">{homework.fileName}</h3>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-600 ml-8">
-                    <span>Professeur: {homework.teacher.user.name}</span>
+                    <span>Professeur: {homework.teacher.user.name || 'N/A'}</span>
                     <span>•</span>
                     <span>
                       Soumis le {format(new Date(homework.submittedAt), 'd MMM yyyy à HH:mm', { locale: fr })}

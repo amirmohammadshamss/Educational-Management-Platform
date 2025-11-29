@@ -13,7 +13,7 @@ interface Booking {
   location?: string;
   teacher: {
     user: {
-      name: string;
+      name: string | null;
       email?: string;
       phone?: string;
     };
@@ -49,8 +49,8 @@ export default function UpcomingBookingsList({ bookings }: UpcomingBookingsListP
       `DTSTAMP:${formatICalDate(new Date())}`,
       `DTSTART:${formatICalDate(startDate)}`,
       `DTEND:${formatICalDate(endDate)}`,
-      `SUMMARY:Cours avec ${booking.teacher.user.name}`,
-      `DESCRIPTION:Cours de formation\\nProfesseur: ${booking.teacher.user.name}\\nDurée: ${booking.duration} minutes`,
+      `SUMMARY:Cours avec ${booking.teacher.user.name || 'N/A'}`,
+      `DESCRIPTION:Cours de formation\\nProfesseur: ${booking.teacher.user.name || 'N/A'}\\nDurée: ${booking.duration} minutes`,
       booking.location ? `LOCATION:${booking.location}` : '',
       'STATUS:CONFIRMED',
       'SEQUENCE:0',
@@ -90,10 +90,10 @@ export default function UpcomingBookingsList({ bookings }: UpcomingBookingsListP
 
       const googleCalendarUrl = new URL('https://calendar.google.com/calendar/render');
       googleCalendarUrl.searchParams.set('action', 'TEMPLATE');
-      googleCalendarUrl.searchParams.set('text', `Cours avec ${booking.teacher.user.name}`);
+      googleCalendarUrl.searchParams.set('text', `Cours avec ${booking.teacher.user.name || 'N/A'}`);
       googleCalendarUrl.searchParams.set(
         'details',
-        `Cours de formation\nProfesseur: ${booking.teacher.user.name}\nDurée: ${booking.duration} minutes`
+        `Cours de formation\nProfesseur: ${booking.teacher.user.name || 'N/A'}\nDurée: ${booking.duration} minutes`
       );
       googleCalendarUrl.searchParams.set('dates', `${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}`);
       if (booking.location) {
@@ -120,8 +120,8 @@ export default function UpcomingBookingsList({ bookings }: UpcomingBookingsListP
           `DTSTAMP:${formatICalDate(new Date())}`,
           `DTSTART:${formatICalDate(startDate)}`,
           `DTEND:${formatICalDate(endDate)}`,
-          `SUMMARY:Cours avec ${booking.teacher.user.name}`,
-          `DESCRIPTION:Cours de formation\\nProfesseur: ${booking.teacher.user.name}\\nDurée: ${booking.duration} minutes`,
+          `SUMMARY:Cours avec ${booking.teacher.user.name || 'N/A'}`,
+          `DESCRIPTION:Cours de formation\\nProfesseur: ${booking.teacher.user.name || 'N/A'}\\nDurée: ${booking.duration} minutes`,
           booking.location ? `LOCATION:${booking.location}` : '',
           'STATUS:CONFIRMED',
           'SEQUENCE:0',

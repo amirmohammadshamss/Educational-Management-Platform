@@ -68,9 +68,9 @@ export async function GET(request: NextRequest) {
       notifications: recentlyReviewed.map((hw) => ({
         id: hw.id,
         homeworkId: hw.id,
-        title: hw.title,
+        title: hw.fileName, // Use fileName as title since there's no title field
         status: hw.status,
-        teacherName: hw.teacher.user.name,
+        teacherName: hw.teacher.user.name || 'Unknown',
         reviewedAt: hw.reviewedAt,
         isRead: hw.reviewedAt ? new Date(hw.reviewedAt) < sevenDaysAgo : true,
       })),

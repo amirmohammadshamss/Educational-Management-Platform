@@ -6,7 +6,7 @@ import { Upload, X, FileText, Loader2, CheckCircle } from 'lucide-react';
 interface Teacher {
   id: string;
   user: {
-    name: string;
+    name: string | null;
   };
 }
 
@@ -17,8 +17,6 @@ interface HomeworkSubmissionFormProps {
 export default function HomeworkSubmissionForm({ onSubmitSuccess }: HomeworkSubmissionFormProps) {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [selectedTeacherId, setSelectedTeacherId] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -129,10 +127,6 @@ export default function HomeworkSubmissionForm({ onSubmitSuccess }: HomeworkSubm
       setError('Veuillez sélectionner un professeur');
       return;
     }
-    if (!title.trim()) {
-      setError('Veuillez saisir un titre');
-      return;
-    }
     if (!file) {
       setError('Veuillez sélectionner un fichier');
       return;
@@ -144,8 +138,6 @@ export default function HomeworkSubmissionForm({ onSubmitSuccess }: HomeworkSubm
     try {
       const formData = new FormData();
       formData.append('teacherId', selectedTeacherId);
-      formData.append('title', title);
-      formData.append('description', description);
       formData.append('file', file);
 
       // Simulate upload progress (since fetch doesn't provide progress)
@@ -175,8 +167,6 @@ export default function HomeworkSubmissionForm({ onSubmitSuccess }: HomeworkSubm
       // Success
       setSuccess(true);
       setSelectedTeacherId('');
-      setTitle('');
-      setDescription('');
       setFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -216,42 +206,10 @@ export default function HomeworkSubmissionForm({ onSubmitSuccess }: HomeworkSubm
             <option value="">Sélectionner un professeur</option>
             {teachers.map((teacher) => (
               <option key={teacher.id} value={teacher.id}>
-                {teacher.user.name}
+                {teacher.user.name || 'N/A'}
               </option>
             ))}
           </select>
-        </div>
-
-        {/* Title */}
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-            Titre du devoir *
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ex: Exercices de mathématiques - Chapitre 5"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            disabled={isSubmitting}
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-            Description (optionnel)
-          </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Ajouter des notes ou commentaires..."
-            rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-            disabled={isSubmitting}
-          />
         </div>
 
         {/* File Upload */}

@@ -211,10 +211,7 @@ export async function POST(request: NextRequest) {
     const session = await requireAuth();
 
     // Check permission - Admin or Teacher can create bookings
-    const canCreate =
-      isAdmin(session.user.role) ||
-      isTeacher(session.user.role) ||
-      hasPermission(session.user.role, Permission.CREATE_BOOKING);
+    const canCreate = isAdmin(session.user.role) || isTeacher(session.user.role);
 
     if (!canCreate) {
       return NextResponse.json(

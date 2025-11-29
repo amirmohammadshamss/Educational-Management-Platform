@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
     await prisma.syncLog.create({
       data: {
         source: 'MANUAL_TRIGGER',
-        status: results.overallSuccess ? 'SUCCESS' : 'PARTIAL_SUCCESS',
+        status: results.overallSuccess ? 'SUCCESS' : 'FAILED',
         message: `Manual sync triggered by ${user.name} (${user.email}). Booking Sync: ${results.bookingSync?.status || 'FAILED'}, Government Sync: ${results.governmentHoursSync?.status || 'FAILED'}, Hours Calculation: ${results.hoursCalculation?.status || 'FAILED'}`,
         lastSyncTime: new Date(),
       },

@@ -21,13 +21,13 @@ interface Booking {
   status: string;
   teacher: {
     user: {
-      name: string;
+      name: string | null;
       email: string;
     };
   };
   student: {
     user: {
-      name: string;
+      name: string | null;
       email: string;
     };
   };
@@ -330,10 +330,10 @@ export default function BookingsReport({ data }: BookingsReportProps) {
                     {new Date(booking.date).toLocaleDateString('fr-FR')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {booking.teacher.user.name}
+                    {booking.teacher.user.name || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {booking.student.user.name}
+                    {booking.student.user.name || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {booking.duration}h

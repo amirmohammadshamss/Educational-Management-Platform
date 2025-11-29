@@ -8,8 +8,6 @@ import HomeworkFeedbackModal from '@/components/student/HomeworkFeedbackModal';
 
 interface Homework {
   id: string;
-  title: string;
-  description: string | null;
   fileUrl: string;
   fileName: string;
   fileSize: number;
@@ -19,7 +17,7 @@ interface Homework {
   reviewedAt: string | null;
   teacher: {
     user: {
-      name: string;
+      name: string | null;
     };
   };
 }

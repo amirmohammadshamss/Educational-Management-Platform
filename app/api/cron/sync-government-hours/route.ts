@@ -75,11 +75,12 @@ export async function GET(request: NextRequest) {
     });
 
     // Determine final status
-    let finalStatus: string;
+    let finalStatus: 'SUCCESS' | 'FAILED';
     if (syncResult.errors.length === 0 && syncResult.studentsNotFound === 0) {
       finalStatus = 'SUCCESS';
     } else if (syncResult.studentsUpdated > 0) {
-      finalStatus = 'PARTIAL_SUCCESS';
+      // Some students were updated successfully, but there were errors
+      finalStatus = 'SUCCESS'; // Mark as success since some data was synced
     } else {
       finalStatus = 'FAILED';
     }
@@ -127,7 +128,8 @@ export async function GET(request: NextRequest) {
           'Failed to sync government hours',
           summary
         );
-      } else if (finalStatus === 'PARTIAL_SUCCESS') {
+      } else if (syncResult.errors.length > 0 || syncResult.studentsNotFound > 0) {
+        // Success with some errors - send partial success alert
         await sendCronPartialSuccessAlert('Government Hours Sync', summary);
       }
     }

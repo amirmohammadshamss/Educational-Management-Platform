@@ -34,10 +34,14 @@ export async function GET(request: NextRequest) {
       include: {
         teachers: {
           include: {
-            user: {
-              select: {
-                name: true,
-                email: true,
+            teacher: {
+              include: {
+                user: {
+                  select: {
+                    name: true,
+                    email: true,
+                  },
+                },
               },
             },
           },
@@ -53,11 +57,11 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      teachers: student.teachers.map((teacher) => ({
-        id: teacher.id,
+      teachers: student.teachers.map((st) => ({
+        id: st.teacher.id,
         user: {
-          name: teacher.user.name,
-          email: teacher.user.email,
+          name: st.teacher.user.name,
+          email: st.teacher.user.email,
         },
       })),
     });

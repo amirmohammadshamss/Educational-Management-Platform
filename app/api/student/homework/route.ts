@@ -52,8 +52,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       homeworks: homeworks.map((hw) => ({
         id: hw.id,
-        title: hw.title,
-        description: hw.description,
         fileUrl: hw.fileUrl,
         fileName: hw.fileName,
         fileSize: hw.fileSize,

@@ -99,9 +99,9 @@ export async function PATCH(
       const { sendHomeworkReviewNotification } = await import('@/lib/notifications');
 
       await sendHomeworkReviewNotification({
-        studentName: homework.student.user.name,
+        studentName: homework.student.user.name || 'Student',
         studentEmail: homework.student.user.email,
-        teacherName: homework.teacher.user.name,
+        teacherName: homework.teacher.user.name || 'Teacher',
         fileName: homework.fileName,
         status: validatedData.status as HomeworkStatus,
         feedback: validatedData.feedback || '',

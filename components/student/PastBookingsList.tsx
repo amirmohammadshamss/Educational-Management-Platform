@@ -12,7 +12,7 @@ interface Booking {
   location?: string;
   teacher: {
     user: {
-      name: string;
+      name: string | null;
       email?: string;
       phone?: string;
     };
@@ -144,7 +144,7 @@ export default function PastBookingsList({ bookings }: PastBookingsListProps) {
                               </div>
                               <div className="flex items-center gap-1">
                                 <User className="h-4 w-4" />
-                                <span>{booking.teacher.user.name}</span>
+                                <span>{booking.teacher.user.name || 'N/A'}</span>
                               </div>
                             </div>
                             {booking.location && (
