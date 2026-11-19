@@ -2,6 +2,12 @@
 
 A web-based Educational Management Platform designed for French educational institutions to manage lesson bookings, track student training hours, and facilitate homework submission between teachers and students.
 
+## Admin Dashboard
+
+![Admin dashboard showing activity metrics, today's lesson bookings, and recent sync logs](docs/screenshots/admin-dashboard.png)
+
+*Dashboard shown with sample data.*
+
 ## Project Status
 
 **Phase 1: Project Setup & Infrastructure** - ✅ Complete
